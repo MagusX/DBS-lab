@@ -22,7 +22,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String showlogin(Model model) {
 		model.addAttribute("loginStatus", "login");
-		return "/login";
+		return "login";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value="/home/{name}")
@@ -30,7 +30,7 @@ public class UserController {
 		if ((loggedIns.size() != 0 && loggedIns.contains(name))) {
 			logger.debug("{}", loggedIns);
 			model.addAttribute("name", name);
-			return "/loginSuccess";
+			return "loginSuccess";
 		}
 		return "redirect:/";
 	}
@@ -45,10 +45,10 @@ public class UserController {
 
 		if (userInfo == null) {
 			model.addAttribute("loginStatus", "failed");
-			return "/login";
+			return "login";
 		}
 		logger.debug("{}", userInfo);
 		loggedIns.add(name);
-		return "redirect:/home/" + name;
+		return "redirect:home/" + name;
 	}
 }
