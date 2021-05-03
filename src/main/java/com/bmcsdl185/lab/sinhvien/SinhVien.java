@@ -11,13 +11,13 @@ public class SinhVien extends User {
 
 	public SinhVien() {}
 
-	public SinhVien(String id, String name, Date dob, String address, String classId, String dnName, String password) {
+	public SinhVien(String id, String name, Date dob, String address, String classId, String username, String password) {
 		this.id = id;
 		this.name = name;
 		this.dob = dob;
 		this.address = address;
 		this.classId = classId;
-		this.dnName = dnName;
+		this.username = username;
 		this.password = password;
 	}
 
@@ -53,7 +53,7 @@ public class SinhVien extends User {
 				", classId='" + classId + '\'' +
 				", id='" + id + '\'' +
 				", name='" + name + '\'' +
-				", dnName='" + dnName + '\'' +
+				", username='" + username + '\'' +
 				", password='" + password + '\'' +
 				", passwordE='" + passwordE + '\'' +
 				'}';

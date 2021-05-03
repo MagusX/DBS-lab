@@ -9,12 +9,12 @@ public class NhanVien extends User {
 
 	public NhanVien() {}
 
-	public NhanVien(String id, String name, String email, int salary, String dnName, String password) {
+	public NhanVien(String id, String name, String email, int salary, String username, String password) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.salary = salary;
-		this.dnName = dnName;
+		this.username = username;
 		this.password = password;
 	}
 
@@ -49,7 +49,7 @@ public class NhanVien extends User {
 				", name='" + name + '\'' +
 				", email='" + email + '\'' +
 				", salaryE=" + salaryE +
-				", dnName='" + dnName + '\'' +
+				", username='" + username + '\'' +
 				", passwordE='" + passwordE + '\'' +
 				'}';
 	}

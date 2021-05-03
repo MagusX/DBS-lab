@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class User {
 	protected String id;
 	protected String name;
-	protected String dnName;
+	protected String username;
 	protected String password;
 	protected String passwordE;
 
@@ -35,12 +35,12 @@ public abstract class User {
 		this.name = name;
 	}
 
-	public String getDnName() {
-		return dnName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setDnName(String dnName) {
-		this.dnName = dnName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

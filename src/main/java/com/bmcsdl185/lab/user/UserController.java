@@ -25,22 +25,22 @@ public class UserController {
 		return "login";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/home/{name}")
-	public String home(@PathVariable("name") String name, Model model) {
-		if ((loggedIns.size() != 0 && loggedIns.contains(name))) {
+	@RequestMapping(method = RequestMethod.GET, value="/home/{username}")
+	public String home(@PathVariable("username") String username, Model model) {
+		if ((loggedIns.size() != 0 && loggedIns.contains(username))) {
 			logger.debug("{}", loggedIns);
-			model.addAttribute("name", name);
+			model.addAttribute("username", username);
 			return "loginSuccess";
 		}
 		return "redirect:/";
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value="/login")
-	public String login(Model model, @RequestParam("name") String name, @RequestParam("password") String password) {
+	public String login(Model model, @RequestParam("username") String username, @RequestParam("password") String password) {
 		User userInfo;
-		userInfo = userService.getLoginInfo("NHANVIEN", "SHA1", name, password);
+		userInfo = userService.getLoginInfo("NHANVIEN", "SHA1", username, password);
 		if (userInfo == null) {
-			userInfo = userService.getLoginInfo("SINHVIEN", "MD5", name, password);
+			userInfo = userService.getLoginInfo("SINHVIEN", "MD5", username, password);
 		}
 
 		if (userInfo == null) {
@@ -48,7 +48,7 @@ public class UserController {
 			return "login";
 		}
 		logger.debug("{}", userInfo);
-		loggedIns.add(name);
-		return "redirect:home/" + name;
+		loggedIns.add(username);
+		return "redirect:home/" + username;
 	}
 }

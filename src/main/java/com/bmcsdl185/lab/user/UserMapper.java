@@ -34,7 +34,7 @@ public class UserMapper implements RowMapper<User> {
 		if (user != null) {
 			user.setId(rs.getString(idLabel));
 			user.setName(rs.getString("HOTEN"));
-			user.setDnName(rs.getString("TENDN"));
+			user.setUsername(rs.getString("TENDN"));
 			user.setPasswordE(rs.getString("MATKHAU"));
 		}
 
