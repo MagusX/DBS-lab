@@ -5,6 +5,8 @@ import com.bmcsdl185.lab.sinhvien.SinhVien;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Date;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = NhanVien.class, name = "NhanVien"),
@@ -58,4 +60,14 @@ public abstract class User {
 	public void setPasswordE(String passwordE) {
 		this.passwordE = passwordE;
 	}
+
+	public void setEmail(String email) {};
+
+	public void setSalaryE(String luong) {};
+
+	public void setDob(Date dob) {};
+
+	public void setAddress(String address) {};
+
+	public void setClassId(String classId) {};
 }
