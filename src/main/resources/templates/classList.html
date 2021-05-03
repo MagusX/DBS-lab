@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Class List</title>
+</head>
+<body>
+    <table>
+    <tr>
+        <th>Mã lớp</th>
+        <th>Tên lớp</th>
+        <th>Nhân viên</th>
+    </tr>
+    <tr th:each="class: ${classList}">
+        <td th:text="${class.classId}"/>
+        <td th:text="${class.className}"/>
+        <td th:text="${class.staffId}"/>
+        <td><a th:href="@{'/staff/' + ${staffId} + '/classList/' + ${class.classId}}">Chi tiết</a></td>
+    </tr>
+    </table>
+</body>
+</html>

@@ -1,7 +1,6 @@
 package com.bmcsdl185.lab.nhanvien;
 
 import com.bmcsdl185.lab.user.User;
-import com.bmcsdl185.lab.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.lang.reflect.Array;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -29,13 +27,12 @@ public class NhanVienController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value="/{id}")
-	public String home(@PathVariable("id") String id, Model model) {
+	public String home(@PathVariable("id") String id) {
 		if (loggedIns.size() != 0) {
 			Object[] nhanVienArray = loggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
 			NhanVien nhanVien = nhanVienArray.length != 0 ? (NhanVien) nhanVienArray[0] : null;
 			if (nhanVien != null) {
-				model.addAttribute("username", nhanVien.getName());
-				return "loginSuccess";
+				return "redirect:" + id + "/classList";
 			}
 		}
 		return "redirect:/";

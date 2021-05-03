@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Students</title>
+</head>
+<body>
+<div th:text="@{'Phụ trách: ' + ${staffId}}"></div>
+<table>
+    <tr>
+        <th>Lớp</th>
+        <th>MASV</th>
+        <th>Tên</th>
+    </tr>
+    <tr th:each="student: ${studentList}">
+        <td th:text="${student.classId}"/>
+        <td th:text="${student.id}"/>
+        <td th:text="${student.name}"/>
+        <!--<td><a th:href="@{'/staff/' + ${staffId} + '/classList/' + ${class.classId}}">Chi tiết</a></td>-->
+    </tr>
+</table>
+</body>
+</html>
