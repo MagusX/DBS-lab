@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Staff Login</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-$END$
+<form action="#" th:action="@{/staff/login}" method="post">
+    <div class="login-container">
+        <div class="login-row warning" th:switch="${loginStatus}">
+            <div th:case="'failed'">Mã nhân viên và mật khẩu không hợp lệ</div>
+        </div>
+        <div class="login-row">
+            <div>Mã nhân viên</div>
+            <div><input name="id" type="text"/></div>
+        </div>
+        <div class="login-row">
+            <div>Mật khẩu</div>
+            <div><input name="password" type="password" /></div>
+        </div>
+        <div class="login-row">
+            <!--<input name="type" th:value="NhanVien"/>-->
+            <input type="submit" value="Đăng nhập" />
+        </div>
+    </div>
+</form>
 </body>
 </html>

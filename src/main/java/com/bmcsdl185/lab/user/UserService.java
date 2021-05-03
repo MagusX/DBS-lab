@@ -19,7 +19,7 @@ public class UserService {
 	public User getLoginInfo(String userType, String algorithm, String username, String password) {
 		String sql;
 		try {
-			sql = String.format("SELECT * FROM %s WHERE TENDN = '%s' AND MATKHAU = HASHBYTES('%s','%s')",
+			sql = String.format("SELECT * FROM %s WHERE TENDN = N'%s' AND MATKHAU = HASHBYTES('%s',N'%s')",
 					userType, username, algorithm, password);
 			return jdbcTemplate.queryForObject(sql,
 					new UserMapper());

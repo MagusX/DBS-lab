@@ -36,8 +36,15 @@ public class UserMapper implements RowMapper<User> {
 			user.setName(rs.getString("HOTEN"));
 			user.setUsername(rs.getString("TENDN"));
 			user.setPasswordE(rs.getString("MATKHAU"));
+			if (idLabel == "MANV") {
+				user.setEmail(rs.getString("EMAIL"));
+				user.setSalaryE(rs.getString("LUONG"));
+			} else if (idLabel == "MASV") {
+				user.setDob(rs.getDate("NGAYSINH"));
+				user.setAddress(rs.getString("DIACHI"));
+				user.setClassId(rs.getString("MALOP"));
+			}
 		}
-
 		return user;
 	}
 }
