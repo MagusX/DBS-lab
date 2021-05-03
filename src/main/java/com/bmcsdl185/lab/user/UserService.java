@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
-
 @Service
 public class UserService {
 	Logger logger = LoggerFactory.getLogger(UserService.class);
