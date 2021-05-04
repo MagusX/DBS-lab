@@ -1,5 +1,6 @@
 package com.bmcsdl185.lab.lop;
 
+import com.bmcsdl185.lab.connection.PoolSerive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +14,12 @@ import java.util.List;
 public class LopController {
 	@Autowired
 	private LopService lopService;
+	@Autowired
+	private PoolSerive poolSerive;
 
 	@RequestMapping(method = RequestMethod.GET, value = "staff/{staffId}/classList")
 	public String lopList(Model model, @PathVariable("staffId") String staffId) {
+		if (!poolSerive.isLoggedIn(staffId)) return "redirect:/";
 		List<Lop> lopList = lopService.getAllLop();
 		model.addAttribute("staffId", staffId);
 		model.addAttribute("classList", lopList);
