@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Students</title>
+    <style type="text/css">
+    .tftable {font-size:15px;color:#333333;width:90%;border-width: 1px;border-color: #a9a9a9;border-collapse: collapse;margin:20px;}
+    .tftable th {font-size:15px;background-color:#cdcdcd;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;text-align:center;}
+    .tftable tr {background-color:white;}
+    .tftable td {font-size:15px;border-width: 1px;padding: 8px;border-style: solid;border-color: #eeeeee;}
+    </style>
 </head>
 <body>
-<table>
+<button><a th:href="@{'/staff/' + ${staffId} + '/classList'}">< Danh sách lớp</a></button>
+<table class="tftable">
     <tr>
         <th>Lớp</th>
         <th>MASV</th>
@@ -21,7 +28,7 @@
                 <td><input name="newClassId" type="text" th:value="${student.classId}"/></td>
                 <td><input name="newStudentId" type="text" th:value="${student.id}"/></td>
                 <td><input name="name" type="text" th:value="${student.name}"/></td>
-                <td><input name="dob" type="text" th:value="${student.dob}"/></td>
+                <td><input name="dob" type="date" th:value="${student.dob}"/></td>
                 <td><input name="address" type="text" th:value="${student.address}"/></td>
                 <td><input name="username" type="text" th:value="${student.username}"/></td>
                 <td><input name="password" type="password" th:value="${student.password}"></td>
@@ -35,7 +42,6 @@
             <td th:text="${student.dob}"/>
             <td th:text="${student.address}"/>
             <td th:text="${student.username}"/>
-            <td th:text="${student.passwordE}"/>
         </div>
     </tr>
 </table>

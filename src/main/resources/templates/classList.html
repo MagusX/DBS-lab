@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Class List</title>
+    <style type="text/css">
+    .tftable {font-size:15px;color:#333333;width:90%;border-width: 1px;border-color: #a9a9a9;border-collapse: collapse;margin:20px;}
+    .tftable th {font-size:15px;background-color:#cdcdcd;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;text-align:center;}
+    .tftable tr {background-color:white;}
+    .tftable td {font-size:15px;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;}
+    </style>
 </head>
 <body>
-    <table>
-    <tr>
-        <th>Mã lớp</th>
-        <th>Tên lớp</th>
-        <th>Nhân viên</th>
-    </tr>
-    <tr th:each="class: ${classList}">
-        <td th:text="${class.classId}"/>
-        <td th:text="${class.className}"/>
-        <td th:text="${class.staffId}"/>
-        <td><a th:href="@{'/staff/' + ${staffId} + '/classList/' + ${class.classId}}">Chi tiết</a></td>
-    </tr>
+    <button><a href="/staff">< Màn hình đăng nhập</a></button>
+    <table class="tftable" border="1">
+        <tr><th>Mã lớp</th><th>Tên lớp</th><th>Nhân viên</th><th>Sinh viên</th></tr>
+        <tr th:each="class: ${classList}">
+            <td th:text="${class.classId}"/>
+            <td th:text="${class.className}"/>
+            <td th:text="${class.staffId}"/>
+            <td><a th:href="@{'/staff/' + ${staffId} + '/classList/' + ${class.classId}}">Danh sách</a></td>
+        </tr>
     </table>
 </body>
 </html>
