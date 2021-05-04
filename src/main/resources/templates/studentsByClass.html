@@ -5,18 +5,38 @@
     <title>Students</title>
 </head>
 <body>
-<div th:text="@{'Phụ trách: ' + ${staffId}}"></div>
 <table>
     <tr>
         <th>Lớp</th>
         <th>MASV</th>
         <th>Tên</th>
+        <th>Ngày sinh</th>
+        <th>Địa chỉ</th>
+        <th>Tên đăng nhập</th>
+        <th>Mật khẩu</th>
     </tr>
     <tr th:each="student: ${studentList}">
-        <td th:text="${student.classId}"/>
-        <td th:text="${student.id}"/>
-        <td th:text="${student.name}"/>
-        <!--<td><a th:href="@{'/staff/' + ${staffId} + '/classList/' + ${class.classId}}">Chi tiết</a></td>-->
+        <div th:if="${classOwner}">
+            <form action="#" th:action="@{'/staff/' + ${staffId} + '/' + ${student.classId} + '/' + ${student.id} + '/studentInfo'}" method="post">
+                <td><input name="newClassId" type="text" th:value="${student.classId}"/></td>
+                <td><input name="newStudentId" type="text" th:value="${student.id}"/></td>
+                <td><input name="name" type="text" th:value="${student.name}"/></td>
+                <td><input name="dob" type="text" th:value="${student.dob}"/></td>
+                <td><input name="address" type="text" th:value="${student.address}"/></td>
+                <td><input name="username" type="text" th:value="${student.username}"/></td>
+                <td><input name="password" type="password" th:value="${student.password}"></td>
+                <td><input type="submit" value="Cập nhật"/></td>
+            </form>
+        </div>
+        <div th:unless="${classOwner}">
+            <td th:text="${student.classId}"/>
+            <td th:text="${student.id}"/>
+            <td th:text="${student.name}"/>
+            <td th:text="${student.dob}"/>
+            <td th:text="${student.address}"/>
+            <td th:text="${student.username}"/>
+            <td th:text="${student.passwordE}"/>
+        </div>
     </tr>
 </table>
 </body>

@@ -1,7 +1,10 @@
 package com.bmcsdl185.lab.sinhvien;
 
 import com.bmcsdl185.lab.user.User;
+import com.bmcsdl185.lab.user.UserController;
 import com.bmcsdl185.lab.user.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,6 +32,22 @@ public class SinhVienService {
 					.collect(Collectors.toList());
 		} catch (EmptyResultDataAccessException e) {
 			return null;
+		}
+	}
+
+	public boolean updateStudentById(String studentId,
+									 String name,
+									 String dob,
+									 String address,
+									 String newClassId,
+									 String username,
+									 String password) {
+		try {
+			int rows = jdbcTemplate.update(String.format("EXEC SP_UPDATE_SINHVIEN N'%s', N'%s', '%s', N'%s', '%s', N'%s', N'%s'",
+					studentId, name, dob, address, newClassId, username, password));
+			return rows == 0;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 }
