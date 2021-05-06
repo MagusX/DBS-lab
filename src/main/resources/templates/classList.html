@@ -7,19 +7,55 @@
     .tftable {font-size:15px;color:#333333;width:90%;border-width: 1px;border-color: #a9a9a9;border-collapse: collapse;margin:20px;}
     .tftable th {font-size:15px;background-color:#cdcdcd;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;text-align:center;}
     .tftable tr {background-color:white;}
-    .tftable td {font-size:15px;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;}
+    .tftable td {font-size:15px;border-width: 1px;padding: 8px;border-style: solid;border-color: #eeeeee;}
+    .tftable .btn {text-align:center;}
     </style>
 </head>
 <body>
-    <button><a href="/staff">< Màn hình đăng nhập</a></button>
-    <table class="tftable" border="1">
-        <tr><th>Mã lớp</th><th>Tên lớp</th><th>Nhân viên</th><th>Sinh viên</th></tr>
-        <tr th:each="class: ${classList}">
-            <td th:text="${class.classId}"/>
-            <td th:text="${class.className}"/>
-            <td th:text="${class.staffId}"/>
-            <td><a th:href="@{'/staff/' + ${staffId} + '/student/' + ${class.classId}}">Danh sách</a></td>
-        </tr>
-    </table>
+    <div th:switch="${mode}">
+    <div th:case="'view'">
+        <input type="button" onclick="location.href='/staff';" value="< Màn hình đăng nhập" />
+        <table class="tftable" border="1">
+            <tr><th>Mã lớp</th><th>Tên lớp</th><th>Nhân viên</th><th>Sinh viên</th></tr>
+            <tr th:each="class: ${classList}">
+                <td th:text="${class.classId}"/>
+                <td th:text="${class.className}"/>
+                <td th:text="${class.staffId}"/>
+                <td class="btn">
+                    <input type="button" th:onclick="|window.location.href='@{'/staff/' + ${staffId} + '/student/' + ${class.classId}}'|" value="Danh sách" />
+                </td>
+            </tr>
+            <tr><td class="btn" colspan="4">
+                <input type="button" th:onclick="|window.location.href='@{'/staff/' + ${staffId} + '/class/view/edit'}'|" value="Sửa đổi" />
+            </td></tr>
+        </table>
+    </div>
+
+    <div th:case="'edit'">
+        <input type="button" th:onclick="|window.location.href='@{'/staff/' + ${staffId} + '/class/view/view'}'|" value="< Danh sách lớp" />
+        <table class="tftable" border="1">
+            <tr><th>Mã lớp</th><th>Tên lớp</th><th>Nhân viên</th>
+            <tr th:each="class: ${classList}">
+                <td th:text="${class.classId}"/>
+                <form action="#" th:action="@{'/staff/' + ${staffId} + '/class/' + ${class.classId}}" method="post">
+                    <td><input name="className" type="text" th:value="${class.className}"/></td>
+                    <td><input name="staffId" type="text" th:value="${class.staffId}"/></td>
+                    <td class="btn"><input type="submit" value="Cập nhật"/></td>
+                </form>
+                <form action="#" th:action="@{'/staff/' + ${staffId} + '/class/' + ${class.classId} + '/delete'}" method="post">
+                    <td class="btn"><input type="submit" value="Xóa"/></td>
+                </form>
+            </tr>
+            <tr>
+                <form action="#" th:action="@{'/staff/' + ${staffId} + '/class'}" method="post">
+                    <td><input name="classId" type="text"/></td>
+                    <td><input name="className" type="text"/></td>
+                    <td><input name="staffId" type="text"/></td>
+                    <td class="btn" colspan="2"><input type="submit" value="Thêm"/></td>
+                </form>
+            </tr>
+        </table>
+    </div>
+    </div>
 </body>
 </html>

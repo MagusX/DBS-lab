@@ -33,4 +33,33 @@ public class LopService {
 			return false;
 		}
 	}
+
+	public boolean addClass(String classId, String className, String staffId) {
+		try {
+			int rows = jdbcTemplate.update(String.format("INSERT INTO LOP VALUES ('%s', N'%s', '%s')",
+					classId, className, staffId));
+			return rows != 0;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public boolean deletClass(String classId) {
+		try {
+			int rows = jdbcTemplate.update(String.format("DELETE FROM LOP WHERE MALOP = '%s'", classId));
+			return rows != 0;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public boolean updateClass(String classId, String className, String staffId) {
+		try {
+			int rows = jdbcTemplate.update(String.format("UPDATE LOP SET TENLOP = N'%s', MANV = '%s' WHERE MALOP = '%s'",
+					className, staffId, classId));
+			return rows != 0;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }

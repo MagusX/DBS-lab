@@ -13,7 +13,7 @@
     </style>
 </head>
 <body>
-<button><a th:href="@{'/staff/' + ${staffId} + '/class'}">< Danh sách lớp</a></button>
+<input type="button" th:onclick="|window.location.href='@{'/staff/' + ${staffId} + '/class/view/view'}'|" value="< Danh sách lớp" />
 <div th:switch="${updateStatus}">
     <div class="success" th:case="'success'">Cập nhật thành công</div>
     <div class="warning" th:case="'failure'">Cập nhật thất bại</div>
