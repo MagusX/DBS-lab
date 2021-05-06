@@ -45,7 +45,7 @@ public class SinhVienService {
 		try {
 			int rows = jdbcTemplate.update(String.format("EXEC SP_UPDATE_SINHVIEN N'%s', N'%s', '%s', N'%s', '%s', N'%s', N'%s'",
 					studentId, name, dob, address, newClassId, username, password));
-			return rows == 0;
+			return rows != 0;
 		} catch (Exception e) {
 			return false;
 		}

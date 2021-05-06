@@ -28,7 +28,7 @@ public class NhanVienController {
 	@RequestMapping(method = RequestMethod.GET, value="/{id}")
 	public String home(@PathVariable("id") String id) {
 		if (poolService.isLoggedIn(id)) {
-			return "redirect:" + id + "/classList";
+			return "redirect:" + id + "/class";
 		}
 		return "redirect:/";
 	}

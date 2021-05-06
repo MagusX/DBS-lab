@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
+@RequestMapping(value = "staff/{staffId}/student")
 public class SinhVienController {
 	@Autowired
 	private SinhVienService sinhVienService;
@@ -23,33 +25,40 @@ public class SinhVienController {
 	@Autowired
 	private LopService lopService;
 
-	Logger logger = LoggerFactory.getLogger(SinhVienService.class);
+	Logger logger = LoggerFactory.getLogger(SinhVienController.class);
 
-	@RequestMapping(method = RequestMethod.GET, value = "/staff/{staffId}/classList/{classId}")
+	@RequestMapping(method = RequestMethod.GET, value = {
+			"/{classId}",
+			"/{classId}/{updateStatus}"
+	})
 	public String studentsByClass(Model model,
 								  @PathVariable("staffId") String staffId,
-								  @PathVariable("classId") String classId) {
-		if (!poolSerive.isLoggedIn(staffId)) return "redirect:staff";
+								  @PathVariable("classId") String classId,
+								  @PathVariable("updateStatus") Optional<String> updateStatus) {
+		if (!poolSerive.isLoggedIn(staffId)) return "staffLogin";
 		List<SinhVien> sinhVienList = sinhVienService.getStudentsByClass(classId);
 		model.addAttribute("staffId", staffId);
 		model.addAttribute("classId", classId);
 		model.addAttribute("classOwner", lopService.isOwner(staffId, classId));
 		model.addAttribute("studentList", sinhVienList);
+		if (updateStatus.isEmpty()) updateStatus = updateStatus.of("");
+		model.addAttribute("updateStatus", updateStatus.get());
 		return "studentsByClass";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/staff/{staffId}/{classId}/{studentId}/studentInfo")
-	public String student(Model model,
-						  @PathVariable("staffId") String staffId,
-						  @PathVariable("classId") String classId,
-						  @PathVariable("studentId") String studentId) {
-		if (!poolSerive.isLoggedIn(staffId)) return "redirect:staff";
-		model.addAttribute("studentId", studentId);
-		return "studentInfo";
-	}
+//	@RequestMapping(method = RequestMethod.GET, value = "/{studentId}/studentInfo")
+//	public String student(Model model,
+//						  @PathVariable("staffId") String staffId,
+//						  @PathVariable("classId") String classId,
+//						  @PathVariable("studentId") String studentId) {
+//		if (!poolSerive.isLoggedIn(staffId)) return "redirect:staff";
+//		model.addAttribute("studentId", studentId);
+//		return "studentInfo";
+//	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/staff/{staffId}/{classId}/{studentId}/studentInfo")
-	public String updateStudent(@PathVariable("staffId") String staffId,
+	@RequestMapping(method = RequestMethod.POST, value = "/{classId}/{studentId}")
+	public String updateStudent(Model model,
+								@PathVariable("staffId") String staffId,
 								@PathVariable("classId") String classId,
 								@RequestParam("newStudentId") String newStudentId,
 								@RequestParam("name") String name,
@@ -59,7 +68,10 @@ public class SinhVienController {
 								@RequestParam("username") String username,
 								@RequestParam("password") String password) {
 		if (!poolSerive.isLoggedIn(staffId) || !lopService.isOwner(staffId, classId)) return "staffLogin";
-		sinhVienService.updateStudentById( newStudentId, name, dob, address, newClassId, username, password);
-		return String.format("redirect:/staff/%s/classList/%s", staffId, classId);
+		String updateStatus;
+		if (sinhVienService.updateStudentById( newStudentId, name, dob, address, newClassId, username, password)) {
+			updateStatus = "success";
+		} else updateStatus = "failure";
+		return String.format("redirect:%s", updateStatus);
 	}
 }

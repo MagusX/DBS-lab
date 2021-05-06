@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Students</title>
     <style type="text/css">
+    .success {background-color:#56d600;}
+    .warning {background-color:#ff7a50;}
     .tftable {font-size:15px;color:#333333;width:90%;border-width: 1px;border-color: #a9a9a9;border-collapse: collapse;margin:20px;}
     .tftable th {font-size:15px;background-color:#cdcdcd;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;text-align:center;}
     .tftable tr {background-color:white;}
@@ -11,7 +13,11 @@
     </style>
 </head>
 <body>
-<button><a th:href="@{'/staff/' + ${staffId} + '/classList'}">< Danh sách lớp</a></button>
+<button><a th:href="@{'/staff/' + ${staffId} + '/class'}">< Danh sách lớp</a></button>
+<div th:switch="${updateStatus}">
+    <div class="success" th:case="'success'">Cập nhật thành công</div>
+    <div class="warning" th:case="'failure'">Cập nhật thất bại</div>
+</div>
 <table class="tftable">
     <tr>
         <th>Lớp</th>
@@ -24,7 +30,7 @@
     </tr>
     <tr th:each="student: ${studentList}">
         <div th:if="${classOwner}">
-            <form action="#" th:action="@{'/staff/' + ${staffId} + '/' + ${student.classId} + '/' + ${student.id} + '/studentInfo'}" method="post">
+            <form action="#" th:action="@{'/staff/' + ${staffId} + '/student/' + ${student.classId} + '/' + ${student.id}}" method="post">
                 <td><input name="newClassId" type="text" th:value="${student.classId}"/></td>
                 <td><input name="newStudentId" type="text" th:value="${student.id}"/></td>
                 <td><input name="name" type="text" th:value="${student.name}"/></td>
