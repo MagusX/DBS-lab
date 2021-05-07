@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transcript</title>
+    <style type="text/css">
+    .tftable {font-size:15px;color:#333333;width:90%;border-width: 1px;border-color: #a9a9a9;border-collapse: collapse;margin:20px;}
+    .tftable th {font-size:15px;background-color:#cdcdcd;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;text-align:center;}
+    .tftable tr {background-color:white;}
+    .tftable td {font-size:15px;border-width: 1px;padding: 8px;border-style: solid;border-color: #eeeeee;}
+    .tftable .btn {text-align:center;}
+    </style>
+</head>
+<body>
+<input type="button" th:onclick="|location.href='@{'/staff/NV01/student/' + ${classId}}'|" value="< Danh sách lớp" />
+<table class="tftable" border="1">
+    <tr><th colspan="2" th:text="@{'MSSV: ' + ${studentId}}"></th></tr>
+    <tr><th>Mã học phần</th><th>Điểm</th></tr>
+    <tr th:each="subject: ${transcript}">
+        <td th:text="${subject.subjectId}"/>
+        <td th:text="${subject.score}"/>
+    </tr>
+    <tr>
+        <form action="#" th:action="@{'/staff/' + ${staffId} + '/score/' + ${classId} + '/' + ${studentId}}" method="post">
+            <td><input name="subjectId" type="text"/></td>
+            <td><input name="score" type="number" step="0.25" min="0" max="10"/></td>
+            <td class="btn" colspan="2"><input type="submit" value="Nhập điểm"/></td>
+        </form>
+    </tr>
+</table>
+</body>
+</html>
