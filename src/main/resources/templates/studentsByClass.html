@@ -32,7 +32,7 @@
         <div th:if="${classOwner}">
             <form action="#" th:action="@{'/staff/' + ${staffId} + '/student/' + ${student.classId} + '/' + ${student.id}}" method="post">
                 <td><input name="newClassId" type="text" th:value="${student.classId}"/></td>
-                <td><input name="newStudentId" type="text" th:value="${student.id}"/></td>
+                <td th:text="${student.id}" />
                 <td><input name="name" type="text" th:value="${student.name}"/></td>
                 <td><input name="dob" type="date" th:value="${student.dob}"/></td>
                 <td><input name="address" type="text" th:value="${student.address}"/></td>

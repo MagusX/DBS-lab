@@ -60,7 +60,7 @@ public class SinhVienController {
 	public String updateStudent(Model model,
 								@PathVariable("staffId") String staffId,
 								@PathVariable("classId") String classId,
-								@RequestParam("newStudentId") String newStudentId,
+								@PathVariable("studentId") String studentId,
 								@RequestParam("name") String name,
 								@RequestParam("dob") String dob,
 								@RequestParam("address") String address,
@@ -69,7 +69,7 @@ public class SinhVienController {
 								@RequestParam("password") String password) {
 		if (!poolSerive.isLoggedIn(staffId) || !lopService.isOwner(staffId, classId)) return "staffLogin";
 		String updateStatus;
-		if (sinhVienService.updateStudentById( newStudentId, name, dob, address, newClassId, username, password)) {
+		if (sinhVienService.updateStudentById(studentId, name, dob, address, newClassId, username, password)) {
 			updateStatus = "success";
 		} else updateStatus = "failure";
 		return String.format("redirect:%s", updateStatus);
