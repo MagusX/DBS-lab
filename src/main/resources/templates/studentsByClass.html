@@ -40,6 +40,9 @@
                 <td><input name="password" type="password" th:value="${student.password}"></td>
                 <td><input type="submit" value="Cập nhật"/></td>
             </form>
+            <td class="btn" colspan="4">
+                <input type="button" th:onclick="|window.location.href='@{'/staff/' + ${staffId} + '/score/' + ${student.classId} + '/' + ${student.id}}'|" value="Điểm" />
+            </td>
         </div>
         <div th:unless="${classOwner}">
             <td th:text="${student.classId}"/>
