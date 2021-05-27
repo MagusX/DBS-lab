@@ -1,6 +1,6 @@
 package com.bmcsdl185.lab.lop;
 
-import com.bmcsdl185.lab.connection.PoolSerive;
+import com.bmcsdl185.lab.connection.PoolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -22,12 +20,12 @@ public class LopController {
 	@Autowired
 	private LopService lopService;
 	@Autowired
-	private PoolSerive poolSerive;
+	private PoolService poolService;
 	private final String redirectUrl = "redirect:/staff/%s/class/view/view";
 
 	@RequestMapping(method = RequestMethod.GET, value = "/view/{mode}")
 	public String lopList(Model model, @PathVariable("staffId") String staffId, @PathVariable("mode") String mode) {
-		if (!poolSerive.isLoggedIn(staffId)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffId)) return "staffLogin";
 		List<Lop> lopList = lopService.getAllLop();
 		model.addAttribute("staffId", staffId);
 		model.addAttribute("classList", lopList);
@@ -40,7 +38,7 @@ public class LopController {
 						 @RequestParam("classId") String classId,
 						 @RequestParam("className") String className,
 						 @RequestParam("staffId") String staffId) {
-		if (!poolSerive.isLoggedIn(staffRequest)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffRequest)) return "staffLogin";
 		lopService.addClass(classId, className, staffId);
 		return String.format(redirectUrl, staffRequest);
 	}
@@ -50,7 +48,7 @@ public class LopController {
 						  @PathVariable("classId") String classId,
 						  @RequestParam("className") String className,
 						  @RequestParam("staffId") String staffId) {
-		if (!poolSerive.isLoggedIn(staffRequest)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffRequest)) return "staffLogin";
 		lopService.updateClass(classId, className, staffId);
 		return String.format(redirectUrl, staffRequest);
 	}
@@ -58,7 +56,7 @@ public class LopController {
 	@RequestMapping(method = RequestMethod.POST, value = "/{classId}/delete")
 	public String deleteLop(@PathVariable("staffId") String staffRequest,
 							@PathVariable("classId") String classId) {
-		if (!poolSerive.isLoggedIn(staffRequest)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffRequest)) return "staffLogin";
 		lopService.deletClass(classId);
 		return String.format(redirectUrl, staffRequest);
 	}

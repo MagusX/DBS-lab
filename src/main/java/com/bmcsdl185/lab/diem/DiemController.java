@@ -1,6 +1,6 @@
 package com.bmcsdl185.lab.diem;
 
-import com.bmcsdl185.lab.connection.PoolSerive;
+import com.bmcsdl185.lab.connection.PoolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class DiemController {
 	@Autowired
 	private DiemService diemService;
 	@Autowired
-	private PoolSerive poolSerive;
+	private PoolService poolService;
 	private final String redirectUrl = "redirect:/staff/%s/score/%s/%s";
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -28,7 +28,7 @@ public class DiemController {
 									@PathVariable("staffId") String staffId,
 									@PathVariable("classId") String classId,
 									@PathVariable("studentId") String studentId) {
-		if (!poolSerive.isLoggedIn(staffId)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffId)) return "staffLogin";
 		List<Diem> transcript = diemService.getStudentTranscript(studentId, staffId);
 		model.addAttribute("studentId", studentId);
 		model.addAttribute("classId", classId);
@@ -42,7 +42,7 @@ public class DiemController {
 								  @PathVariable("studentId") String studentId,
 								  @RequestParam("subjectId") String subjectId,
 								  @RequestParam("score") float score) {
-		if (!poolSerive.isLoggedIn(staffId)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffId)) return "staffLogin";
 		diemService.addScore(studentId, subjectId, score, staffId);
 		return String.format(redirectUrl, staffId, classId, studentId);
 	}

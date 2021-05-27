@@ -1,6 +1,6 @@
 package com.bmcsdl185.lab.sinhvien;
 
-import com.bmcsdl185.lab.connection.PoolSerive;
+import com.bmcsdl185.lab.connection.PoolService;
 import com.bmcsdl185.lab.lop.LopService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class SinhVienController {
 	@Autowired
 	private SinhVienService sinhVienService;
 	@Autowired
-	private PoolSerive poolSerive;
+	private PoolService poolService;
 	@Autowired
 	private LopService lopService;
 
@@ -35,7 +35,7 @@ public class SinhVienController {
 								  @PathVariable("staffId") String staffId,
 								  @PathVariable("classId") String classId,
 								  @PathVariable("updateStatus") Optional<String> updateStatus) {
-		if (!poolSerive.isLoggedIn(staffId)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffId)) return "staffLogin";
 		List<SinhVien> sinhVienList = sinhVienService.getStudentsByClass(classId);
 		model.addAttribute("staffId", staffId);
 		model.addAttribute("classId", classId);
@@ -51,7 +51,7 @@ public class SinhVienController {
 //						  @PathVariable("staffId") String staffId,
 //						  @PathVariable("classId") String classId,
 //						  @PathVariable("studentId") String studentId) {
-//		if (!poolSerive.isLoggedIn(staffId)) return "redirect:staff";
+//		if (!poolService.isLoggedIn(staffId)) return "redirect:staff";
 //		model.addAttribute("studentId", studentId);
 //		return "studentInfo";
 //	}
@@ -67,7 +67,7 @@ public class SinhVienController {
 								@RequestParam("newClassId") String newClassId,
 								@RequestParam("username") String username,
 								@RequestParam("password") String password) {
-		if (!poolSerive.isLoggedIn(staffId) || !lopService.isOwner(staffId, classId)) return "staffLogin";
+		if (!poolService.isLoggedIn(staffId) || !lopService.isOwner(staffId, classId)) return "staffLogin";
 		String updateStatus;
 		if (sinhVienService.updateStudentById(studentId, name, dob, address, newClassId, username, password)) {
 			updateStatus = "success";
