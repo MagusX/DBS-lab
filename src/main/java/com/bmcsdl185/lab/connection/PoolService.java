@@ -1,30 +1,43 @@
 package com.bmcsdl185.lab.connection;
 
 import com.bmcsdl185.lab.nhanvien.NhanVien;
+import com.bmcsdl185.lab.sinhvien.SinhVien;
+import com.bmcsdl185.lab.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Service
-public class PoolSerive {
-	private static Set<NhanVien> loggedIns = new LinkedHashSet<>();
+public class PoolService {
+	private static Set<NhanVien> staffLoggedIns = new LinkedHashSet<>();
+	private static Set<SinhVien> studentsloggedIns = new LinkedHashSet<>();
 
-	public Set<NhanVien> getLoggedIns() {
-		return loggedIns;
-	}
+//	public Boolean isLoggedIn(String id) {
+//		Object[] nhanVienArray = loggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
+//		NhanVien nhanVien = nhanVienArray.length != 0 ? (NhanVien) nhanVienArray[0] : null;
+//		return nhanVien != null;
+//	}
 
-	public void setLoggedIns(Set<NhanVien> loggedIns) {
-		PoolSerive.loggedIns = loggedIns;
-	}
-
-	public void newLogin(NhanVien nhanVien) {
-		loggedIns.add(nhanVien);
+	public void newLogin(User user) {
+		if (user.getClass().getSimpleName().equals("NhanVien")) {
+			staffLoggedIns.add((NhanVien) user);
+		} else if (user.getClass().getSimpleName().equals("SinhVien")) {
+			studentsloggedIns.add((SinhVien) user);
+		}
 	}
 
 	public Boolean isLoggedIn(String id) {
-		Object[] nhanVienArray = loggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
-		NhanVien nhanVien = nhanVienArray.length != 0 ? (NhanVien) nhanVienArray[0] : null;
-		return nhanVien != null;
+		Object[] staffArray = staffLoggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
+		NhanVien nhanVien = staffArray.length != 0 ? (NhanVien) staffArray[0] : null;
+
+		Object[] studentArray = studentsloggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
+		SinhVien sinhVien = studentArray.length != 0 ? (SinhVien) studentArray[0] : null;
+		return !(nhanVien == null && sinhVien == null);
+	}
+
+	public void logout(String id) {
+		staffLoggedIns.removeIf(user -> user.getId().equals(id));
+		studentsloggedIns.removeIf(user -> user.getId().equals(id));
 	}
 }

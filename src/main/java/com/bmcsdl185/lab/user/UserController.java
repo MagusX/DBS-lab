@@ -1,5 +1,6 @@
 package com.bmcsdl185.lab.user;
 
+import com.bmcsdl185.lab.connection.PoolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,25 +15,16 @@ import java.util.Set;
 @RequestMapping("/")
 public class UserController {
 	Logger logger = LoggerFactory.getLogger(UserController.class);
-	Set<String> loggedIns = new LinkedHashSet<>();
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PoolService poolService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String showlogin(Model model) {
 		model.addAttribute("loginStatus", "login");
 		return "login";
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value="/home/{username}")
-	public String home(@PathVariable("username") String username, Model model) {
-		if ((loggedIns.size() != 0 && loggedIns.contains(username))) {
-			logger.debug("{}", loggedIns);
-			model.addAttribute("username", username);
-			return "loginSuccess";
-		}
-		return "redirect:/";
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value="/login")
@@ -47,8 +39,13 @@ public class UserController {
 			model.addAttribute("loginStatus", "failed");
 			return "login";
 		}
-		logger.debug("{}", userInfo);
-		loggedIns.add(username);
-		return "redirect:home/" + username;
+		poolService.newLogin(userInfo);
+		return "redirect:staff/" + userInfo.getId() + "/staff/view";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/logout/{staffId}")
+	public String logout(@PathVariable("staffId") String staffId) {
+		poolService.logout(staffId);
+		return "redirect:/";
 	}
 }
