@@ -32,10 +32,14 @@ public class UserMapper implements RowMapper<User> {
 		} else return null;
 
 		if (user != null) {
+			if (hasColumn(rs, "TENDN")) {
+				user.setUsername(rs.getString("TENDN"));
+			}
+			if (hasColumn(rs, "MATKHAU")) {
+				user.setPasswordE(rs.getString("MATKHAU"));
+			}
 			user.setId(rs.getString(idLabel));
 			user.setName(rs.getString("HOTEN"));
-			user.setUsername(rs.getString("TENDN"));
-			user.setPasswordE(rs.getString("MATKHAU"));
 			if (idLabel == "MANV") {
 				user.setEmail(rs.getString("EMAIL"));
 				user.setSalaryE(rs.getString("LUONG"));
