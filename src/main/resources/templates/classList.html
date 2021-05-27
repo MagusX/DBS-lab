@@ -14,7 +14,7 @@
 <body>
     <div th:switch="${mode}">
     <div th:case="'view'">
-        <input type="button" onclick="location.href='/staff';" value="< Màn hình đăng nhập" />
+        <input type="button" th:onclick="|window.location.href='@{'/staff/' + ${staffId} + '/staff/view'}'|" value="< Danh sách nhân viên" />
         <table class="tftable" border="1">
             <tr><th>Mã lớp</th><th>Tên lớp</th><th>Nhân viên</th><th>Sinh viên</th></tr>
             <tr th:each="class: ${classList}">
