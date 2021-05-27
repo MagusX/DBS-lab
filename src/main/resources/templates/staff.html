@@ -10,10 +10,14 @@
     .tftable td {font-size:15px;border-width: 1px;padding: 8px;border-style: solid;border-color: #eeeeee;}
     .tftable .btn {text-align:center;}
     .tb1 {width:100%;margin:0px;}
+    #class-redirect {text-align:right;}
     </style>
 </head>
 <body>
 <div>
+    <div id="class-redirect">
+    <input type="button" value="Lớp học >" th:onclick="|window.location.href='@{'/staff/' + ${staffId} + '/class/view/view'}'|"/>
+    </div>
     <table th:if="${mode != 'delete'}" class="tftable" border="0">
         <form action="#" th:action="@{'/staff/' + ${staffId} + '/staff' + ${mode == 'update' ? '/update' : ''}}" method="post" autocomplete="no">
             <div th:if="${mode != 'view' && mode != 'delete'}">
