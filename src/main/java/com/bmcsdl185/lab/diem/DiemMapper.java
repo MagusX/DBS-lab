@@ -10,10 +10,10 @@ public class DiemMapper implements RowMapper<Diem> {
 	Logger logger = LoggerFactory.getLogger(DiemMapper.class);
 	@Override
 	public Diem mapRow(ResultSet rs, int rowNum) throws SQLException {
-		return new Diem(
-				rs.getString("MASV"),
-				rs.getString("MAHP"),
-				Float.parseFloat(rs.getString("DIEMTHI"))
-		);
+		Diem diem = new Diem();
+		diem.setStudentId(rs.getString("MASV"));
+		diem.setSubjectId(rs.getString("MAHP"));
+		diem.setScoreE(rs.getString("DIEMTHI"));
+		return diem;
 	}
 }
