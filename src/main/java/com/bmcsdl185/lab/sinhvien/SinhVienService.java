@@ -1,5 +1,7 @@
 package com.bmcsdl185.lab.sinhvien;
 
+import com.bmcsdl185.lab.encrypt.Digest;
+import com.bmcsdl185.lab.encrypt.Utils;
 import com.bmcsdl185.lab.user.User;
 import com.bmcsdl185.lab.user.UserController;
 import com.bmcsdl185.lab.user.UserMapper;
@@ -21,6 +23,10 @@ public class SinhVienService {
 	 * */
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private Digest digest;
+	@Autowired
+	private Utils utils;
 
 	public List<SinhVien> getStudentsByClass(String classId) {
 		try {
@@ -43,8 +49,16 @@ public class SinhVienService {
 									 String username,
 									 String password) {
 		try {
-			int rows = jdbcTemplate.update(String.format("EXEC SP_UPDATE_SINHVIEN N'%s', N'%s', '%s', N'%s', '%s', N'%s', N'%s'",
-					studentId, name, dob, address, newClassId, username, password));
+			String pwdQuery = "";
+			if (password != "" && password != null) {
+				String passwordE = utils.toHexString(digest.hashBytes(password, "MD5"));
+				pwdQuery = String.format(", MATKHAU = CONVERT(VARBINARY(MAX), CONCAT('0x', '%s'), 1) ", passwordE);
+			}
+			int rows = jdbcTemplate.update(String.format("UPDATE SINHVIEN " +
+							"SET HOTEN = N'%s', NGAYSINH = N'%s', DIACHI = '%s', MALOP = N'%s', TENDN = '%s' " +
+							pwdQuery +
+							"WHERE MASV = N'%s'",
+					name, dob, address, newClassId, username, studentId));
 			return rows != 0;
 		} catch (Exception e) {
 			return false;
