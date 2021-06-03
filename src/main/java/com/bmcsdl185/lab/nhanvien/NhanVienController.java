@@ -49,6 +49,7 @@ public class NhanVienController {
 			model.addAttribute("loginStatus", "failed");
 			return "staffLogin";
 		}
+		nhanVien.setPassword(password);
 		poolService.newLogin(nhanVien);
 		return "redirect:" + nhanVien.getId();
 	}
@@ -59,7 +60,7 @@ public class NhanVienController {
 							   @PathVariable("mode") String mode) {
 		logger.info("{}", poolService.isLoggedIn(staffId));
 		if (!poolService.isLoggedIn(staffId)) return "login";
-		List<NhanVien> staffList = nhanVienService.getStaffList();
+		List<NhanVien> staffList = nhanVienService.getStaffList((NhanVien) poolService.getUser(NhanVien.class, staffId));
 		model.addAttribute("mode", mode);
 		model.addAttribute("staffId", staffId);
 		model.addAttribute("staffList", staffList);
@@ -93,10 +94,9 @@ public class NhanVienController {
 							  @RequestParam("name") String name,
 							  @RequestParam("email") String email,
 							  @RequestParam("salary") int salary,
-							  @RequestParam("username") String username,
-							  @RequestParam("password") String password) {
+							  @RequestParam("username") String username) {
 		if (!poolService.isLoggedIn(staffId)) return "login";
-		nhanVienService.updateStaffById(id, name, email, salary, username, password);
+		nhanVienService.updateStaffById(id, name, email, salary, username);
 		return String.format(redirectUrl, staffId);
 	}
 }

@@ -1,8 +1,11 @@
 package com.bmcsdl185.lab.nhanvien;
 
+import com.bmcsdl185.lab.connection.PoolService;
 import com.bmcsdl185.lab.encrypt.AES256;
 import com.bmcsdl185.lab.encrypt.Digest;
+import com.bmcsdl185.lab.encrypt.RSA512;
 import com.bmcsdl185.lab.encrypt.Utils;
+import com.bmcsdl185.lab.user.User;
 import com.bmcsdl185.lab.user.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.security.KeyPair;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,41 +26,38 @@ public class NhanVienService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	@Autowired
-	private AES256 aes256;
+	private RSA512 rsa512;
 	@Autowired
 	private Digest digest;
 	@Autowired
 	private Utils utils;
+	@Autowired
+	private PoolService poolService;
 
 	public NhanVien getLoginInfo(String id, String password) {
-		String sql;
-		String passwordE = "0x" + utils.toHexString(digest.hashBytes(password, "SHA1"));
 		try {
-			sql = String.format("SELECT * FROM NHANVIEN WHERE MANV = '%s' AND MATKHAU = %s",
+			String passwordE = utils.toHexString(digest.hashBytes(password, "SHA1"));
+			String sql = String.format("EXEC SP_SEL_PUBLIC_ENCRYPT_NHANVIEN '%s', '%s'",
 					id, passwordE);
 			logger.info(sql);
 			return (NhanVien) jdbcTemplate.queryForObject(sql, new UserMapper());
-		} catch (EmptyResultDataAccessException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
 
 	public boolean addStaff(String id, String name, String email, int salary, String username, String password) {
-		SecretKeySpec key = aes256.getKeyIfNullCreate("18120185", "18120185", "123");
-		String salaryE;
-		String passwordE;
-
 		try {
-			salaryE = utils.toHexString(aes256.encrypt(String.valueOf(salary), key));
-			passwordE = utils.toHexString(digest.hashBytes(password, "SHA1"));
-		} catch (Exception e) {
-			logger.error("{}", e);
-			return false;
-		}
+			KeyPair pair = rsa512.createKeyPair(password, "123");
+			byte[] publicKey = pair.getPublic().getEncoded();
 
-		try {
-			int rows = jdbcTemplate.update(String.format("EXEC SP_INS_ENCRYPT_NHANVIEN '%s','%s','%s','%s','%s','%s'",
-					id, name, email, salaryE, username, passwordE));
+			String salaryE = utils.toHexString(rsa512.encrypt(publicKey, String.valueOf(salary)));
+			String passwordE = utils.toHexString(digest.hashBytes(password, "SHA1"));
+
+			int rows = jdbcTemplate.update(String.format("EXEC SP_INS_PUBLIC_ENCRYPT_NHANVIEN '%s','%s','%s','%s','%s','%s','%s'",
+					id, name, email, salaryE, username, passwordE, utils.toHexString(publicKey)));
+			logger.info(String.format("EXEC SP_INS_PUBLIC_ENCRYPT_NHANVIEN '%s','%s','%s','%s','%s','%s','%s'",
+					id, name, email, salaryE, username, passwordE, utils.toHexString(publicKey)));
 			return rows != 0;
 		} catch (Exception e) {
 			logger.warn("{}", e);
@@ -64,11 +65,26 @@ public class NhanVienService {
 		}
 	}
 
-	public List<NhanVien> getStaffList() {
+	public List<NhanVien> getStaffList(NhanVien loggedIn) {
 		try {
 			return jdbcTemplate.query("EXEC SP_SEL_ENCRYPT_NHANVIEN", new UserMapper())
 					.stream()
-					.map(user -> (NhanVien) user)
+					.map(user -> {
+						NhanVien staff = (NhanVien) user;
+						if (staff.getId().equals(loggedIn.getId())) {
+							try {
+								KeyPair pair = rsa512.createKeyPair(loggedIn.getPassword(), "123");
+								byte[] privateKey = pair.getPrivate().getEncoded();
+								String salaryE = staff.getSalaryE();
+								if (salaryE != null) {
+									staff.setSalary(Integer.parseInt(new String(rsa512.decrypt(privateKey, "0x" + salaryE))));
+								}
+							} catch (Exception e) {
+								logger.warn("{}", e);
+							}
+						}
+						return staff;
+					})
 					.collect(Collectors.toList());
 		} catch (EmptyResultDataAccessException e) {
 			logger.warn("{}", e);
@@ -80,29 +96,20 @@ public class NhanVienService {
 								   String name,
 								   String email,
 								   int salary,
-								   String username,
-								   String password) {
-		String query = "UPDATE NHANVIEN " +
-				"SET MANV = '%s', HOTEN = N'%s', EMAIL = '%s', LUONG = convert(varbinary(max), concat('0x', '%s'), 1), TENDN = N'%s'";
-		SecretKeySpec key = aes256.getKeyIfNullCreate("18120185", "18120185", "123");
-		String salaryE;
-		String passwordE;
-
+								   String username) {
 		try {
-			salaryE = utils.toHexString(aes256.encrypt(String.valueOf(salary), key));
-			if (!password.equals("")) {
-				passwordE = utils.toHexString(digest.hashBytes(password, "SHA1"));
-				query += ", MATKHAU = convert(varbinary(max), concat('0x', '%s'), 1)";
-				query = String.format(query + " WHERE MANV = '%s'", id, name, email, salaryE, username, passwordE, id);
-			} else {
-				query = String.format(query + " WHERE MANV = '%s'", id, name, email, salaryE, username, id);
-			}
+			User staff = poolService.getUser(NhanVien.class, id);
+			KeyPair pair = rsa512.createKeyPair(staff.getPassword(), "123");
+			byte[] publicKey = pair.getPublic().getEncoded();
+
+			String salaryE = utils.toHexString(rsa512.encrypt(publicKey, String.valueOf(salary)));
+			return jdbcTemplate.update(String.format("UPDATE NHANVIEN " +
+					"SET MANV = '%s', HOTEN = N'%s', EMAIL = '%s', LUONG = convert(varbinary(max), concat('0x', '%s'), 1), TENDN = N'%s' " +
+					"WHERE MANV = '%s'", id, name, email, salaryE, username, id)) != 0;
 		} catch (Exception e) {
 			logger.error("{}", e);
 			return false;
 		}
-		logger.info(query);
-		return jdbcTemplate.update(query) != 0;
 	}
 
 	public boolean deleteStaff(String id) {
