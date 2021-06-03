@@ -1,6 +1,7 @@
 package com.bmcsdl185.lab.diem;
 
 import com.bmcsdl185.lab.connection.PoolService;
+import com.bmcsdl185.lab.nhanvien.NhanVien;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class DiemController {
 									@PathVariable("classId") String classId,
 									@PathVariable("studentId") String studentId) {
 		if (!poolService.isLoggedIn(staffId)) return "staffLogin";
-		List<Diem> transcript = diemService.getStudentTranscript(studentId, staffId);
+		List<Diem> transcript = diemService.getStudentTranscript(studentId, (NhanVien) poolService.getUser(NhanVien.class, staffId));
+		logger.info("{}", transcript);
 		model.addAttribute("studentId", studentId);
 		model.addAttribute("classId", classId);
 		model.addAttribute("transcript", transcript);
@@ -43,7 +45,7 @@ public class DiemController {
 								  @RequestParam("subjectId") String subjectId,
 								  @RequestParam("score") float score) {
 		if (!poolService.isLoggedIn(staffId)) return "staffLogin";
-		diemService.addScore(studentId, subjectId, score, staffId);
+		diemService.addScore(studentId, subjectId, score, ((NhanVien) poolService.getUser(NhanVien.class, staffId)).getPublicKey());
 		return String.format(redirectUrl, staffId, classId, studentId);
 	}
 }
