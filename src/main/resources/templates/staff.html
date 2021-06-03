@@ -37,6 +37,10 @@
                 <tr>
                     <td>Tên đăng nhập</td>
                     <td><input name="username" type="text"/></td>
+                    <div th:if="${mode == 'insert'}">
+                        <td>Mật khẩu</td>
+                        <td><input name="password" type="password"/></td>
+                    </div>
                 </tr>
             </div>
 
