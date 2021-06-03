@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-<input type="button" th:onclick="|location.href='@{'/staff/NV01/student/' + ${classId}}'|" value="< Danh sách lớp" />
+<input type="button" th:onclick="|location.href='@{'/staff/' + ${staffId} + '/student/' + ${classId}}'|" value="< Danh sách lớp" />
 <table class="tftable" border="1">
     <tr><th colspan="2" th:text="@{'MSSV: ' + ${studentId}}"></th></tr>
     <tr><th>Mã học phần</th><th>Điểm</th></tr>
