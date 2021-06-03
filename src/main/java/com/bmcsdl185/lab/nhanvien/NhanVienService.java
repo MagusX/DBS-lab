@@ -37,7 +37,8 @@ public class NhanVienService {
 	public NhanVien getLoginInfo(String id, String password) {
 		try {
 			String passwordE = utils.toHexString(digest.hashBytes(password, "SHA1"));
-			String sql = String.format("EXEC SP_SEL_PUBLIC_ENCRYPT_NHANVIEN '%s', '%s'",
+			String sql = String.format("SELECT MANV, HOTEN, EMAIL, LUONG, PUBKEY " +
+										"FROM NHANVIEN WHERE MANV = N'%s' AND MATKHAU = 0x%s",
 					id, passwordE);
 			logger.info(sql);
 			return (NhanVien) jdbcTemplate.queryForObject(sql, new UserMapper());
@@ -98,11 +99,8 @@ public class NhanVienService {
 								   int salary,
 								   String username) {
 		try {
-			User staff = poolService.getUser(NhanVien.class, id);
-			KeyPair pair = rsa512.createKeyPair(staff.getPassword(), id);
-			byte[] publicKey = pair.getPublic().getEncoded();
-
-			String salaryE = utils.toHexString(rsa512.encrypt(publicKey, String.valueOf(salary)));
+			NhanVien staff = (NhanVien) poolService.getUser(NhanVien.class, id);
+			String salaryE = utils.toHexString(rsa512.encrypt(utils.toByteArray(staff.getPublicKey()), String.valueOf(salary)));
 			return jdbcTemplate.update(String.format("UPDATE NHANVIEN " +
 					"SET MANV = '%s', HOTEN = N'%s', EMAIL = '%s', LUONG = convert(varbinary(max), concat('0x', '%s'), 1), TENDN = N'%s' " +
 					"WHERE MANV = '%s'", id, name, email, salaryE, username, id)) != 0;
