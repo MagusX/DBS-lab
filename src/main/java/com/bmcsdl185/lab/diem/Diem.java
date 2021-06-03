@@ -4,6 +4,7 @@ public class Diem {
 	private String studentId;
 	private String subjectId;
 	private float score;
+	private String scoreE;
 
 	public Diem() {}
 
@@ -37,12 +38,21 @@ public class Diem {
 		this.score = score;
 	}
 
+	public String getScoreE() {
+		return scoreE;
+	}
+
+	public void setScoreE(String scoreE) {
+		this.scoreE = scoreE;
+	}
+
 	@Override
 	public String toString() {
 		return "Diem{" +
 				"studentId='" + studentId + '\'' +
 				", subjectId='" + subjectId + '\'' +
 				", score=" + score +
+				", scoreE='" + scoreE + '\'' +
 				'}';
 	}
 }
