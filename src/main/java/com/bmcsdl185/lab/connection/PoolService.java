@@ -28,16 +28,32 @@ public class PoolService {
 	}
 
 	public Boolean isLoggedIn(String id) {
-		Object[] staffArray = staffLoggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
-		NhanVien nhanVien = staffArray.length != 0 ? (NhanVien) staffArray[0] : null;
-
-		Object[] studentArray = studentsloggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
-		SinhVien sinhVien = studentArray.length != 0 ? (SinhVien) studentArray[0] : null;
-		return !(nhanVien == null && sinhVien == null);
+//		Object[] staffArray = staffLoggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
+//		NhanVien nhanVien = staffArray.length != 0 ? (NhanVien) staffArray[0] : null;
+//
+//		Object[] studentArray = studentsloggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
+//		SinhVien sinhVien = studentArray.length != 0 ? (SinhVien) studentArray[0] : null;
+//		return !(nhanVien == null && sinhVien == null);
+		return !(this.getUser(NhanVien.class, id) == null && this.getUser(SinhVien.class, id) == null);
 	}
 
 	public void logout(String id) {
 		staffLoggedIns.removeIf(user -> user.getId().equals(id));
 		studentsloggedIns.removeIf(user -> user.getId().equals(id));
+	}
+
+	public User getUser(Class type, String id) {
+		switch (type.getSimpleName()) {
+			case "NhanVien": {
+				Object[] staffArray = staffLoggedIns.stream().filter(nv -> nv.getId().equals(id)).toArray();
+				return staffArray.length != 0 ? (NhanVien) staffArray[0] : null;
+			}
+			case "SinhVien": {
+				Object[] studentArray = studentsloggedIns.stream().filter(sv -> sv.getId().equals(id)).toArray();
+				return studentArray.length != 0 ? (SinhVien) studentArray[0] : null;
+			}
+			default:
+				return null;
+		}
 	}
 }
