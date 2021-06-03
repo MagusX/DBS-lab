@@ -1,5 +1,7 @@
 package com.bmcsdl185.lab.encrypt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 @Service
 public class RSA512 {
+	Logger logger = LoggerFactory.getLogger(RSA512.class);
 	private final static int KEY_LENGTH = 512;
 	private final static String ALGORITHM = "RSA";
 
@@ -33,23 +36,23 @@ public class RSA512 {
 		return generator.generateKeyPair();
 	}
 
-	public byte[] encrypt(byte[] publicKey, byte[] inputData) throws Exception {
+	public byte[] encrypt(byte[] publicKey, String inputData) throws Exception {
 		PublicKey key = KeyFactory.getInstance(ALGORITHM)
 				.generatePublic(new X509EncodedKeySpec(publicKey));
 
 		Cipher cipher = Cipher.getInstance(ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 
-		return cipher.doFinal(inputData);
+		return cipher.doFinal(inputData.getBytes());
 	}
 
-	public byte[] decrypt(byte[] privateKey, byte[] inputData) throws Exception {
+	public byte[] decrypt(byte[] privateKey, String inputData) throws Exception {
 		PrivateKey key = KeyFactory.getInstance(ALGORITHM)
 				.generatePrivate(new PKCS8EncodedKeySpec(privateKey));
 
 		Cipher cipher = Cipher.getInstance(ALGORITHM);
 		cipher.init(Cipher.DECRYPT_MODE, key);
 
-		return cipher.doFinal(inputData);
+		return cipher.doFinal(utils.toByteArray(inputData));
 	}
 }
