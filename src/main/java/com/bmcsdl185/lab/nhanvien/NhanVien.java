@@ -6,6 +6,7 @@ public class NhanVien extends User {
 	private String email;
 	private int salary;
 	private String salaryE;
+	private String publicKey;
 
 	public NhanVien() {}
 
@@ -41,6 +42,12 @@ public class NhanVien extends User {
 	public void setSalaryE(String salaryE) {
 		this.salaryE = salaryE;
 	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
+	}
+
+	public String getPublicKey() { return this.publicKey; }
 
 	@Override
 	public String toString() {
