@@ -70,4 +70,6 @@ public abstract class User {
 	public void setAddress(String address) {};
 
 	public void setClassId(String classId) {};
+
+	public void setPublicKey(String publicKey) {};
 }

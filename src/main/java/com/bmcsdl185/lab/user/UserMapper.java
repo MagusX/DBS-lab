@@ -38,6 +38,9 @@ public class UserMapper implements RowMapper<User> {
 			if (hasColumn(rs, "MATKHAU")) {
 				user.setPasswordE(rs.getString("MATKHAU"));
 			}
+			if (hasColumn(rs, "PUBKEY")) {
+				user.setPublicKey(rs.getString("PUBKEY"));
+			}
 			user.setId(rs.getString(idLabel));
 			user.setName(rs.getString("HOTEN"));
 			if (idLabel == "MANV") {
