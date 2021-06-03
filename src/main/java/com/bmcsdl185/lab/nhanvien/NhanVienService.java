@@ -48,7 +48,7 @@ public class NhanVienService {
 
 	public boolean addStaff(String id, String name, String email, int salary, String username, String password) {
 		try {
-			KeyPair pair = rsa512.createKeyPair(password, "123");
+			KeyPair pair = rsa512.createKeyPair(password, id);
 			byte[] publicKey = pair.getPublic().getEncoded();
 
 			String salaryE = utils.toHexString(rsa512.encrypt(publicKey, String.valueOf(salary)));
@@ -73,7 +73,7 @@ public class NhanVienService {
 						NhanVien staff = (NhanVien) user;
 						if (staff.getId().equals(loggedIn.getId())) {
 							try {
-								KeyPair pair = rsa512.createKeyPair(loggedIn.getPassword(), "123");
+								KeyPair pair = rsa512.createKeyPair(loggedIn.getPassword(), loggedIn.getId());
 								byte[] privateKey = pair.getPrivate().getEncoded();
 								String salaryE = staff.getSalaryE();
 								if (salaryE != null) {
@@ -99,7 +99,7 @@ public class NhanVienService {
 								   String username) {
 		try {
 			User staff = poolService.getUser(NhanVien.class, id);
-			KeyPair pair = rsa512.createKeyPair(staff.getPassword(), "123");
+			KeyPair pair = rsa512.createKeyPair(staff.getPassword(), id);
 			byte[] publicKey = pair.getPublic().getEncoded();
 
 			String salaryE = utils.toHexString(rsa512.encrypt(publicKey, String.valueOf(salary)));
