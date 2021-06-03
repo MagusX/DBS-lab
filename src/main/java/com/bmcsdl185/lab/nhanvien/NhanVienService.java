@@ -72,7 +72,7 @@ public class NhanVienService {
 					.stream()
 					.map(user -> {
 						NhanVien staff = (NhanVien) user;
-						if (staff.getId().equals(loggedIn.getId())) {
+						if (loggedIn != null && staff.getId().equals(loggedIn.getId())) {
 							try {
 								KeyPair pair = rsa512.createKeyPair(loggedIn.getPassword(), loggedIn.getId());
 								byte[] privateKey = pair.getPrivate().getEncoded();
