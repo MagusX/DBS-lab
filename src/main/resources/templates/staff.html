@@ -29,7 +29,7 @@
                             <input name="staffId" type="text"/>
                         </div>
                         <div th:if="${mode == 'update'}">
-                            <input name="staffId" type="text" th:value="${staffId}" disabled/>
+                            <input name="staffId" type="text" th:value="${staffId}" readonly/>
                         </div>
                     </td>
                     <td>Họ tên</td>
