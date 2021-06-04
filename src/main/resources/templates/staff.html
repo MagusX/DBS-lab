@@ -52,7 +52,12 @@
                         <td th:text="${staff.id}"/>
                         <td th:text="${staff.name}"/>
                         <td th:text="${staff.email}"/>
-                        <td th:text="${staff.salary}"/>
+                        <div th:if="${staff.salary != 0}">
+                            <td th:else th:text="${staff.salary}"/>
+                        </div>
+                        <div th:if="${staff.salary == 0}">
+                            <td/>
+                        </div>
                     </tr>
                 </table>
                 </td>
@@ -75,7 +80,13 @@
             <td th:text="${staff.id}"/>
             <td th:text="${staff.name}"/>
             <td th:text="${staff.email}"/>
-            <td th:text="${staff.salary}"/>
+            <div th:if="${staff.salary != 0}">
+                <td th:else th:text="${staff.salary}"/>
+            </div>
+            <div th:if="${staff.salary == 0}">
+                <td/>
+            </div>
+
             <td class="btn" th:hidden="${mode != 'delete'}">
                 <form action="#" th:action="@{'/staff/' + ${staffId} + '/staff/' + ${staff.id} + '/delete'}" method="post">
                     <input type="submit" value="Xóa"/>
