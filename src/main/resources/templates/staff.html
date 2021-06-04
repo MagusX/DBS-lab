@@ -24,7 +24,14 @@
                 <tr><th th:text="${mode}"></th></tr>
                 <tr>
                     <td>Mã NV</td>
-                    <td><input name="staffId" type="text"/></td>
+                    <td>
+                        <div th:if="${mode == 'insert'}">
+                            <input name="staffId" type="text"/>
+                        </div>
+                        <div th:if="${mode == 'update'}">
+                            <input name="staffId" type="text" th:value="${staffId}" disabled/>
+                        </div>
+                    </td>
                     <td>Họ tên</td>
                     <td><input name="name" type="text"/></td>
                 </tr>
